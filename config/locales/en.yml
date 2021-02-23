@@ -1,0 +1,901 @@
+---
+en:
+  activemodel:
+    attributes:
+      collaborative_draft:
+        address: Address
+        body: Body
+        category_id: Category
+        decidim_scope_id: Scope
+        has_address: Has address
+        scope_id: Scope
+        state: State
+        title: Title
+        user_group_id: Create collaborative draft as
+      fiction:
+        address: Address
+        answer: Answer
+        answered_at: Answered at
+        automatic_hashtags: Hashtags automatically added
+        body: Body
+        category_id: Category
+        decidim_scope_id: Scope
+        has_address: Has address
+        scope_id: Scope
+        state: State
+        suggested_hashtags: Suggested hashtags
+        title: Title
+        user_group_id: Create fiction as
+      fiction_answer:
+        answer: Answer
+      fictions_copy:
+        copy_fictions: I understand that this will import all fictions from the selected component to the current one and that this action can't be reversed.
+        origin_component_id: Component to copy the fictions from
+      fictions_import:
+        import_fictions: Import fictions
+        keep_authors: Keep original authors
+      valuation_assignment:
+        admin_log:
+          valuator_role_id: Valuator name
+    errors:
+      models:
+        participatory_text:
+          attributes:
+            document:
+              invalid_document_type: 'Invalid document type. Accepted formats are: %{valid_mime_types}'
+        fiction:
+          attributes:
+            attachment:
+              needs_to_be_reattached: Needs to be reattached
+            body:
+              cant_be_equal_to_template: cannot be equal to the template
+              identical: AND title cannot be identical
+            title:
+              identical: AND body cannot be identical
+    models:
+      decidim/fictions/accepted_fiction_event: Fiction accepted
+      decidim/fictions/admin/update_fiction_category_event: Fiction category changed
+      decidim/fictions/admin/update_fiction_scope_event: Fiction scope changed
+      decidim/fictions/creation_enabled_event: Fiction creation enabled
+      decidim/fictions/endorsing_enabled_event: Fiction endorsing enabled
+      decidim/fictions/evaluating_fiction_event: Fiction is being evaluated
+      decidim/fictions/fiction_mentioned_event: Fiction mentioned
+      decidim/fictions/publish_fiction_event: Fiction published
+      decidim/fictions/rejected_fiction_event: Fiction rejected
+      decidim/fictions/voting_enabled_event: Fiction voting enabled
+  activerecord:
+    models:
+      decidim/fictions/collaborative_draft:
+        one: Collaborative draft
+        other: Collaborative drafts
+      decidim/fictions/fiction:
+        one: Fiction
+        other: Fictions
+      decidim/fictions/fiction_note:
+        one: Note
+        other: Notes
+      decidim/fictions/fiction_vote:
+        one: Support
+        other: Supports
+  decidim:
+    admin:
+      filters:
+        fictions:
+          category_id_eq:
+            label: Category
+          is_emendation_true:
+            label: Type
+            values:
+              'false': Fictions
+              'true': Amendments
+          scope_id_eq:
+            label: Scope
+          state_eq:
+            label: State
+            values:
+              accepted: Accepted
+              evaluating: Evaluating
+              published: Published
+              rejected: Rejected
+              validating: Technical validation
+              withdrawn: Withdrawn
+          state_null:
+            label: State
+            values:
+              'true': Not answered
+          valuator_role_ids_has:
+            label: Assigned to valuator
+        search_placeholder:
+          id_string_or_title_cont: Search %{collection} by ID or title.
+    components:
+      fictions:
+        actions:
+          amend: Amend
+          create: Create
+          endorse: Endorse
+          vote: Support
+          withdraw: Withdraw
+        name: Fictions
+        settings:
+          global:
+            allow_card_image: Allow card image
+            amendments_enabled: Amendments enabled
+            amendments_enabled_help: If active, configure Amendment features for each step.
+            amendments_wizard_help_text: Amendments Wizard help text
+            announcement: Announcement
+            attachments_allowed: Allow attachments
+            can_accumulate_supports_beyond_threshold: Can accumulate supports beyond threshold
+            collaborative_drafts_enabled: Collaborative drafts enabled
+            comments_enabled: Comments enabled
+            geocoding_enabled: Geocoding enabled
+            minimum_votes_per_user: Minimum supports per user
+            new_fiction_body_template: New fiction body template
+            new_fiction_body_template_help: You can define prefilled text that the new Fictions will have
+            new_fiction_help_text: New fiction help text
+            official_fictions_enabled: Official fictions enabled
+            participatory_texts_enabled: Participatory texts enabled
+            participatory_texts_enabled_readonly: Cannot interact with this setting if there are existing fictions. Please, create a new `Fictions component` if you want to enable this feature or discard all imported fictions in the `Participatory Texts` menu if you want to disable it.
+            fiction_answering_enabled: Fiction answering enabled
+            fiction_edit_before_minutes: Fictions can be edited by authors before this many minutes passes
+            fiction_length: Maximum fiction body length
+            fiction_limit: Fiction limit per participant
+            fiction_wizard_step_1_help_text: Fiction wizard "Create" step help text
+            fiction_wizard_step_2_help_text: Fiction wizard "Compare" step help text
+            fiction_wizard_step_3_help_text: Fiction wizard "Complete" step help text
+            fiction_wizard_step_4_help_text: Fiction wizard "Publish" step help text
+            resources_permissions_enabled: Actions permissions can be set for each fiction
+            threshold_per_fiction: Threshold per fiction
+            vote_limit: Support limit per participant
+          step:
+            amendment_creation_enabled: Amendment creation enabled
+            amendment_creation_enabled_help: Participant can amend fictions.
+            amendment_promotion_enabled: Amendment promotion enabled
+            amendment_promotion_enabled_help: Emandation authors will be able to promote to Fiction the rejected emendation.
+            amendment_reaction_enabled: Amendment reaction enabled
+            amendment_reaction_enabled_help: Fiction's authors will be able to accept or reject Participant's emendations.
+            amendments_visibility: Amendments visibility
+            amendments_visibility_choices:
+              all: Amendments are visible to all
+              participants: Amendments are visible only to their authors
+            amendments_visibility_help: If the option "Amendments are visible only to their authors" is selected, participant must be logged in to see the amendments made.
+            announcement: Announcement
+            answers_with_costs: Enable costs on fiction answers
+            automatic_hashtags: Hashtags added to all fictions
+            comments_blocked: Comments blocked
+            creation_enabled: Fiction creation enabled
+            endorsements_blocked: Endorsements blocked
+            endorsements_enabled: Endorsements enabled
+            fiction_answering_enabled: Fiction answering enabled
+            publish_answers_immediately: Publish fiction answers immediately
+            suggested_hashtags: Hashtags suggested to participants for new fictions
+            votes_blocked: Supports blocked
+            votes_enabled: Supports enabled
+            votes_hidden: Supports hidden (if supports are enabled, checking this will hide the number of supports)
+    events:
+      fictions:
+        admin:
+          fiction_note_created:
+            email_intro: Someone has left a note on the fiction "%{resource_title}". Check it out at <a href="%{admin_fiction_info_url}">the admin panel</a>
+            email_outro: You have received this notification because you can valuate the fiction.
+            email_subject: Someone left a note on fiction %{resource_title}.
+            notification_title: Someone has left a note on the fiction <a href="%{resource_path}">%{resource_title}</a>. Check it out at <a href="%{admin_fiction_info_path}">the admin panel</a>
+        collaborative_draft_access_accepted:
+          email_intro: '%{requester_name} has been accepted to access as a contributor of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.'
+          email_outro: You have received this notification because you are a collaborator of <a href="%{resource_path}">%{resource_title}</a>.
+          email_subject: "%{requester_name} has been accepted to access as a contributor of the %{resource_title}."
+          notification_title: <a href="%{requester_path}">%{requester_name} %{requester_nickname}</a> has been <strong>accepted to access as a contributor</strong> of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+        collaborative_draft_access_rejected:
+          email_intro: '%{requester_name} has been rejected to access as a contributor of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.'
+          email_outro: You have received this notification because you are a collaborator of <a href="%{resource_path}">%{resource_title}</a>.
+          email_subject: "%{requester_name} has been rejected to access as a contributor of the %{resource_title} collaborative draft."
+          notification_title: <a href="%{requester_path}">%{requester_name} %{requester_nickname}</a> has been <strong>rejected to access as a contributor</strong> of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+        collaborative_draft_access_requested:
+          email_intro: '%{requester_name} requested access as a contributor. You can <strong>accept or reject the request</strong> from the <a href="%{resource_path}">%{resource_title}</a> collaborative draft page.'
+          email_outro: You have received this notification because you are a collaborator of <a href="%{resource_path}">%{resource_title}</a>.
+          email_subject: "%{requester_name} requested access to contribute to %{resource_title}."
+          notification_title: <a href="%{requester_path}">%{requester_name} %{requester_nickname}</a> requested access to contribute to the <a href="%{resource_path}">%{resource_title}</a> collaborative draft. Please <strong>accept or reject the request</strong>.
+        collaborative_draft_access_requester_accepted:
+          email_intro: You have been accepted to access as a contributor of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+          email_outro: You have received this notification because you requested to become a collaborator of <a href="%{resource_path}">%{resource_title}</a>.
+          email_subject: You have been accepted as a contributor of %{resource_title}.
+          notification_title: You have been <strong>accepted to access as a contributor</strong> of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+        collaborative_draft_access_requester_rejected:
+          email_intro: You have been rejected to access as a contributor of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+          email_outro: You have received this notification because you requested to become a collaborator of <a href="%{resource_path}">%{resource_title}</a>.
+          email_subject: You have been rejected as a contributor of %{resource_title}.
+          notification_title: You have been <strong>rejected to access as a contributor</strong> of the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+        collaborative_draft_withdrawn:
+          email_intro: <a href="%{author_path}">%{author_name} %{author_nickname}</a> withdrawn the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+          email_outro: You have received this notification because you are a collaborator of <a href="%{resource_path}">%{resource_title}</a>.
+          email_subject: "%{author_name} %{author_nickname} withdrawn the %{resource_title} collaborative draft."
+          notification_title: <a href="%{author_path}">%{author_name} %{author_nickname}</a> <strong>withdrawn</strong> the <a href="%{resource_path}">%{resource_title}</a> collaborative draft.
+        creation_enabled:
+          email_intro: 'You can now create new fictions in %{participatory_space_title}! Start participating in this page:'
+          email_outro: You have received this notification because you are following %{participatory_space_title}. You can stop receiving notifications following the previous link.
+          email_subject: Fictions now available in %{participatory_space_title}
+          notification_title: You can now put forward <a href="%{resource_path}">new fictions</a> in <a href="%{participatory_space_url}">%{participatory_space_title}</a>
+        endorsing_enabled:
+          email_intro: 'You can endorse fictions in %{participatory_space_title}! Start participating in this page:'
+          email_outro: You have received this notification because you are following %{participatory_space_title}. You can stop receiving notifications following the previous link.
+          email_subject: Fictions endorsing has started for %{participatory_space_title}
+          notification_title: You can now start <a href="%{resource_path}">endorsing fictions</a> in <a href="%{participatory_space_url}">%{participatory_space_title}</a>
+        fiction_accepted:
+          affected_user:
+            email_intro: 'Your fiction "%{resource_title}" has been accepted. You can read the answer in this page:'
+            email_outro: You have received this notification because you are an author of "%{resource_title}".
+            email_subject: Your fiction has been accepted
+            notification_title: Your fiction <a href="%{resource_path}">%{resource_title}</a> has been accepted.
+          follower:
+            email_intro: 'The fiction "%{resource_title}" has been accepted. You can read the answer in this page:'
+            email_outro: You have received this notification because you are following "%{resource_title}". You can unfollow it from the previous link.
+            email_subject: A fiction you're following has been accepted
+            notification_title: The <a href="%{resource_path}">%{resource_title}</a> fiction has been accepted.
+        fiction_evaluating:
+          affected_user:
+            email_intro: 'Your fiction "%{resource_title}" is currently being evaluated. You can check for an answer in this page:'
+            email_outro: You have received this notification because you are an author of "%{resource_title}".
+            email_subject: Your fiction is being evaluated
+            notification_title: Your fiction <a href="%{resource_path}">%{resource_title}</a> is being evaluated.
+          follower:
+            email_intro: 'The fiction "%{resource_title}" is currently being evaluated. You can check for an answer in this page:'
+            email_outro: You have received this notification because you are following "%{resource_title}". You can unfollow it from the previous link.
+            email_subject: A fiction you're following is being evaluated
+            notification_title: The <a href="%{resource_path}">%{resource_title}</a> fiction is being evaluated.
+        fiction_mentioned:
+          email_intro: Your fiction "%{mentioned_fiction_title}" has been mentioned <a href="%{resource_url}">in this space</a> in the comments.
+          email_outro: You have received this notification because you are an author of "%{resource_title}".
+          email_subject: Your fiction "%{mentioned_fiction_title}" has been mentioned
+          notification_title: Your fiction "%{mentioned_fiction_title}" has been mentioned <a href="%{resource_path}">in this space</a> in the comments.
+        fiction_published:
+          email_intro: '%{author_name} %{author_nickname}, who you are following, has published a new fiction called "%{resource_title}". Check it out and contribute:'
+          email_outro: You have received this notification because you are following %{author_nickname}. You can stop receiving notifications following the previous link.
+          email_subject: New fiction "%{resource_title}" by %{author_nickname}
+          notification_title: The <a href="%{resource_path}">%{resource_title}</a> fiction was published by <a href="%{author_path}">%{author_name} %{author_nickname}</a>.
+        fiction_published_for_space:
+          email_intro: The fiction "%{resource_title}" has been added to "%{participatory_space_title}" that you are following.
+          email_outro: You have received this notification because you are following "%{participatory_space_title}". You can stop receiving notifications following the previous link.
+          email_subject: New fiction "%{resource_title}" added to %{participatory_space_title}
+          notification_title: The fiction <a href="%{resource_path}">%{resource_title}</a> has been added to %{participatory_space_title}
+        fiction_rejected:
+          affected_user:
+            email_intro: 'Your fiction "%{resource_title}" has been rejected. You can read the answer in this page:'
+            email_outro: You have received this notification because you are an author of "%{resource_title}".
+            email_subject: Your fiction been rejected
+            notification_title: Your fiction <a href="%{resource_path}">%{resource_title}</a> has been rejected.
+          follower:
+            email_intro: 'The fiction "%{resource_title}" has been rejected. You can read the answer in this page:'
+            email_outro: You have received this notification because you are following "%{resource_title}". You can unfollow it from the previous link.
+            email_subject: A fiction you're following has been rejected
+            notification_title: The <a href="%{resource_path}">%{resource_title}</a> fiction has been rejected.
+        fiction_update_category:
+          email_intro: 'An admin has updated the category of your fiction "%{resource_title}", check it out in this page:'
+          email_outro: You have received this notification because you are the author of the fiction.
+          email_subject: The %{resource_title} fiction category has been updated
+          notification_title: The <a href="%{resource_path}">%{resource_title}</a> fiction category has been updated by an admin.
+        fiction_update_scope:
+          email_intro: 'An admin has updated the scope of your fiction "%{resource_title}", check it out in this page:'
+          email_outro: You have received this notification because you are the author of the fiction.
+          email_subject: The %{resource_title} fiction scope has been updated
+          notification_title: The <a href="%{resource_path}">%{resource_title}</a> fiction scope has been updated by an admin.
+        voting_enabled:
+          email_intro: 'You can support fictions in %{participatory_space_title}! Start participating in this page:'
+          email_outro: You have received this notification because you are following %{participatory_space_title}. You can stop receiving notifications following the previous link.
+          email_subject: Fiction support has started for %{participatory_space_title}
+          notification_title: You can now start <a href="%{resource_path}">supporting fictions</a> in <a href="%{participatory_space_url}">%{participatory_space_title}</a>
+    gamification:
+      badges:
+        accepted_fictions:
+          conditions:
+          - Choose the participation space of your interest with submission for fictions enabled
+          - Try to make fictions that can be carried out. This way they are more likely to be accepted.
+          description: This badge is granted when you actively participate with new fictions and these are accepted.
+          description_another: This participant had %{score} accepted fictions.
+          description_own: You got %{score} fictions accepted.
+          name: Accepted fictions
+          next_level_in: Get %{score} more fictions accepted to reach the next level!
+          unearned_another: This participant has not yet had any accepted fictions.
+          unearned_own: You got no fictions accepted yet.
+        fiction_votes:
+          conditions:
+          - Browse and spend some time reading other people's fictions
+          - Give support to the fictions you like or find interesting
+          description: This badge is granted when you support other people's fictions.
+          description_another: This participant has given support to %{score} fictions.
+          description_own: You have given support to %{score} fictions.
+          name: Fiction supports
+          next_level_in: Give support to %{score} more fictions to reach the next level!
+          unearned_another: This participant hasn't given support to any fictions yet.
+          unearned_own: You have given support to no fictions yet.
+        fictions:
+          conditions:
+          - Choose the participation space of your interest with submission for fictions enabled
+          - Create a new fiction
+          description: This badge is granted when you actively participate with new fictions.
+          description_another: This participant has created %{score} fictions.
+          description_own: You have created %{score} fictions.
+          name: Fictions
+          next_level_in: Create %{score} more fictions to reach the next level!
+          unearned_another: This participant hasn't created any fictions yet.
+          unearned_own: You have created no fictions yet.
+    metrics:
+      accepted_fictions:
+        description: Number of fictions accepted
+        object: fictions
+        title: Accepted fictions
+      endorsements:
+        description: Number of endorsements to fictions
+        object: endorsements
+        title: Endorsements
+      fictions:
+        description: Number of fictions
+        object: fictions
+        title: Fictions
+      votes:
+        description: Number of supports to fictions
+        object: supports
+        title: Supports
+    participatory_processes:
+      participatory_process_groups:
+        highlighted_fictions:
+          fictions: Fictions
+      statistics:
+        fictions_count: Fictions
+    participatory_spaces:
+      highlighted_fictions:
+        see_all: See all fictions (%{count})
+    fictions:
+      actions:
+        answer_fiction: Answer fiction
+        edit_fiction: Edit fiction
+        import: Import from another component
+        new: New fiction
+        participatory_texts: Participatory texts
+        show: Show fiction
+        title: Actions
+      admin:
+        actions:
+          preview: Preview
+        exports:
+          comments: Comments
+          fictions: Fictions
+        models:
+          fiction:
+            name: Fiction
+        participatory_texts:
+          bulk-actions:
+            are_you_sure: Are you sure to discard the whole participatory text draft?
+            discard_all: Discard all
+            import_doc: Import document
+          discard:
+            success: All participatory text drafts have been discarded.
+          import:
+            invalid: The form is invalid!
+            invalid_file: The file contains some error, please try to edit the content of the file and re-upload it again.
+            success: Congratulations, the following sections have been converted to fictions. Now you can review and adjust them before publishing.
+          index:
+            info_1: The following sections have been converted to fictions. Now you can review and adjust them before publishing.
+            publish_document: Publish document
+            save_draft: Save draft
+            title: Preview participatory text
+          new_import:
+            accepted_mime_types:
+              md: Markdown
+              odt: Odt
+            bottom_hint: "(You will be able to preview and sort document sections)"
+            document_legend: 'Add a document lesser than 2MB, each section until 3 levels deep will be parsed into Fictions. Suported formats are: %{valid_mime_types}'
+            title: Add document
+            upload_document: Upload document
+          publish:
+            invalid: Could not publish fictions
+            success: All fictions have been published
+          sections:
+            article: "<em>Article</em>"
+            section: "<em>Section:</em> <strong>%{title}</strong>"
+            sub-section: "<em>Subsection:</em> %{title}"
+          update:
+            success: Participatory text successfully updated.
+        fiction_answers:
+          form:
+            accepted: Accepted
+            answer_fiction: Answer
+            evaluating: Evaluating
+            rejected: Rejected
+            title: Answer for fiction %{title}
+        fiction_notes:
+          create:
+            error: There was a problem creating this fiction note
+            success: Fiction note successfully created
+          form:
+            note: Note
+            submit: Submit
+          leave_your_note: Leave your note
+          title: Private notes
+        fictions:
+          answer:
+            invalid: There's been a problem answering this fiction
+            success: Fiction successfully answered
+          create:
+            invalid: There's been a problem creating this fiction
+            success: Fiction successfully created
+          edit:
+            title: Update fiction
+            update: Update
+          form:
+            attachment_legend: "(Optional) Add an attachment"
+            created_in_meeting: This fiction comes from a meeting
+            select_a_category: Select a category
+            select_a_meeting: Select a meeting
+          index:
+            actions: Actions
+            assign_to_valuator: Assign to valuator
+            assign_to_valuator_button: Assign
+            cancel: Cancel
+            change_category: Change category
+            change_scope: Change scope
+            merge: Merge into a new one
+            merge_button: Merge
+            publish: Publish
+            publish_answers: Publish answers
+            select_component: Select a component
+            selected: selected
+            split: Split fictions
+            split_button: Split
+            title: Fictions
+            unassign_from_valuator: Unassign from valuator
+            unassign_from_valuator_button: Unassign
+            update: Update
+            update_scope_button: Update Scope
+          new:
+            create: Create
+            title: Create fiction
+          publish_answers:
+            number_of_fictions: Answers for %{number} fictions will be published.
+            select_a_fiction: Please select a fiction
+          show:
+            amendments_count: Amendments count
+            assigned_valuators: Assigned valuators
+            authors: Authors
+            body: Body
+            comments_count: Comments count
+            comments_negative_count: Against
+            comments_neutral_count: Neutral
+            comments_positive_count: Favor
+            created_at: Creation date
+            documents: Documents
+            endorsements_count: Endorsements count
+            endorsements_ranking: Ranking by endorsements
+            endorsers: Endorsers
+            link: Link
+            n_more_endorsers:
+              one: and 1 more
+              other: and %{count} more
+            photos: Photos
+            fictions: Fictions
+            ranking: "%{ranking} of %{total}"
+            related_meetings: Related meetings
+            remove_assignment: Remove assignment
+            remove_assignment_confirmation: Are you sure you want to remove the valuator from this fiction?
+            valuators: Valuators
+            votes_count: Supports count
+            votes_ranking: Ranking by supports
+          update_category:
+            invalid: 'These fictions already had the %{subject_name} category: %{fictions}.'
+            select_a_category: Please select a category
+            select_a_fiction: Please select a fiction
+            success: 'Fictions successfully updated to the %{subject_name} category: %{fictions}.'
+          update_scope:
+            invalid: 'These fictions already had the %{subject_name} scope: %{fictions}.'
+            select_a_fiction: Please select a fiction
+            select_a_scope: Please select a scope
+            success: 'Fictions successfully updated to the %{subject_name} scope: %{fictions}.'
+        fictions_imports:
+          create:
+            invalid: There was a problem importing the fictions
+            success: "%{number} fictions successfully imported"
+          new:
+            create: Import fictions
+            no_components: There are no other fiction components in this participatory space to import the fictions from.
+            select_component: Please select a component
+            select_states: Check the status of the fictions to import
+        fictions_merges:
+          create:
+            invalid: There was a problem merging the selected fictions.
+            success: Successfully merged the fictions into a new one.
+        fictions_splits:
+          create:
+            invalid: There was a problem spliting the selected fictions.
+            success: Successfully splitted the fictions into new ones.
+        valuation_assignments:
+          create:
+            invalid: There was an error assigning fictions to a valuator
+            success: Fictions assigned to a valuator successfully
+          delete:
+            invalid: There was an error unassigning fictions from a valuator
+            success: Valuator unassigned from fictions successfully
+      admin_log:
+        fiction:
+          answer: "%{user_name} answered the %{resource_name} fiction on the %{space_name} space"
+          create: "%{user_name} created the %{resource_name} fiction on the %{space_name} space as an official fiction"
+          publish_answer: "%{user_name} published the answer to %{resource_name} fiction on the %{space_name} space"
+          update: "%{user_name} updated the %{resource_name} official fiction on the %{space_name} space"
+        fiction_note:
+          create: "%{user_name} left a private note on the %{resource_name} fiction on the %{space_name} space"
+        valuation_assignment:
+          create: "%{user_name} assigned the %{resource_name} fiction to a valuator"
+          delete: "%{user_name} unassigned a valuator from the %{fiction_title} fiction"
+      answers:
+        accepted: Accepted
+        evaluating: Evaluating
+        not_answered: Not answered
+        rejected: Rejected
+        withdrawn: Withdrawn
+      application_helper:
+        filter_category_values:
+          all: All
+        filter_origin_values:
+          all: All
+          citizens: Citizens
+          meetings: Meetings
+          official: Official
+          user_groups: Groups
+        filter_scope_values:
+          all: All
+        filter_state_values:
+          accepted: Accepted
+          all: All
+          evaluating: Evaluating
+          not_answered: Not answered
+          rejected: Rejected
+        filter_type_values:
+          all: All
+          amendments: Amendments
+          fictions: Fictions
+      collaborative_drafts:
+        collaborative_draft:
+          publish:
+            error: There was a problem publishing the collaborative draft.
+            irreversible_action_modal:
+              body: After publishing the draft as a fiction, the draft won't be editable anymore. The fiction won't accept new authors or contributions.
+              cancel: Cancel
+              ok: Publish as a Fiction
+              title: The following action is irreversible
+            success: Collaborative draft published successfully as a fiction.
+          view_collaborative_draft: View Collaborative Draft
+          withdraw:
+            error: There was a problem closing the collaborative draft.
+            irreversible_action_modal:
+              body: After closing the draft, the draft won't be editable anymore. The draft won't accept new authors or contributions.
+              cancel: Cancel
+              ok: Withdraw the collaborative draft
+              title: The following action is irreversible
+            success: Collaborative draft withdrawn successfully.
+        compare:
+          mine_is_different: My collaborative draft is different
+          no_similars_found: Well done! No similar collaborative drafts found
+          title: Similar collaborative drafts
+        complete:
+          send: Send
+          title: Complete your collaborative draft
+        count:
+          drafts_count:
+            one: "%{count} collaborative draft"
+            other: "%{count} collaborative drafts"
+        create:
+          error: There was a problem creating this collaborative drafts
+          success: Collaborative draft successfully created.
+        edit:
+          attachment_legend: "(Optional) Add an attachment"
+          back: Back
+          select_a_category: Please select a category
+          send: Send
+          title: Edit collaborative draft
+        filters:
+          all: All
+          amendment: Amendments
+          category: Category
+          open: Open
+          published: Published
+          related_to: Related to
+          scope: Scope
+          search: Search
+          state: Status
+          withdrawn: Withdrawn
+        filters_small_view:
+          close_modal: Close modal
+          filter: Filter
+          filter_by: Filter by
+          unfold: Unfold
+        new:
+          send: Continue
+          title: Create Your collaborative draft
+        new_collaborative_draft_button:
+          new_collaborative_draft: New collaborative draft
+        orders:
+          label: 'Order drafts by:'
+          most_contributed: Most contributed
+          random: Random
+          recent: Recent
+        requests:
+          accepted_request:
+            error: Could not be accepted as a collaborator, please try again later.
+            success: "@%{user} has been accepted as a collaborator successfully"
+          access_requested:
+            error: Your request could not be completed, please try again later.
+            success: Your request to collaborate has been successfully sent
+          collaboration_requests:
+            accept_request: Accept
+            reject_request: Reject
+            title: Collaboration requests
+          rejected_request:
+            error: Could not be rejected as a collaborator, please try again later.
+            success: "@%{user} has been successfully rejected as a collaborator"
+        show:
+          back: Back
+          edit: Edit collaborative draft
+          final_fiction: final fiction
+          final_fiction_help_text: This draft is finished. Check out the final fiction
+          hidden_authors_count:
+            one: and %{count} more person
+            other: and %{count} more people
+          info-message: This is a <strong>collaborative draft</strong> for a fiction. This means that you can help their authors to shape the fiction using the comment section below or improve it directly by requesting access to edit it. Once the authors grant you access, you'll be able to make changes to this draft.
+          publish: Publish
+          publish_info: Publish this version of the draft or
+          published_fiction: published fiction
+          request_access: Request access
+          requested_access: Access requested
+          version_history: see version history for this fiction
+          withdraw: withdraw the draft
+        states:
+          open: Open
+          published: Published
+          withdrawn: Withdrawn
+        update:
+          error: There was a problem saving the collaborative draft.
+          success: Collaborative draft successfully updated.
+          title: Edit collaborative draft
+        wizard_aside:
+          back: Back
+          back_from_collaborative_draft: Back to collaborative drafts
+          back_from_step_1: Back to collaborative drafts
+          back_from_step_2: Back to collaborative drafts
+          back_from_step_3: Back to compare collaborative drafts
+          back_from_step_4: Back to edit draft
+          info: You are creating a <strong>collaborative draft</strong>.
+        wizard_steps:
+          current_step: Current step
+          see_steps: see steps
+          step_1: Create your collaborative draft
+          step_2: Compare with collaborative drafts
+          step_3: Complete your collaborative draft
+          step_of: Step %{current_step_num} of %{total_steps}
+          title: Collaborative draft creation steps
+      create:
+        error: There was a problem saving the fiction.
+        success: Fiction successfully created. Saved as a Draft.
+      destroy_draft:
+        error: There was a problem deleting the collaborative draft.
+        success: Fiction draft was successfully deleted.
+      last_activity:
+        new_fiction_at_html: "<span>New fiction at %{link}</span>"
+      models:
+        collaborative_draft:
+          fields:
+            authors: Authors
+            comments: Comments
+            contributions: Contributions
+        fiction:
+          fields:
+            category: Category
+            comments: Comments
+            id: ID
+            notes: Notes
+            official_fiction: Official fiction
+            published_answer: Published answer
+            published_at: Published at
+            scope: Scope
+            state: Status
+            title: Title
+            valuator: Valuator
+            valuators: Valuators
+            votes: Votes
+      new:
+        limit_reached: You can't create new fictions since you've exceeded the limit.
+      participatory_text_fiction:
+        alternative_title: There are no participatory texts at the moment
+        buttons:
+          amend: Amend
+          comment: Comment
+          comments: Comments
+      fiction_votes:
+        create:
+          error: There was a problem supporting the fiction.
+      fictions:
+        compare:
+          continue: Continue
+          no_similars_found: Well done! No similar fictions found
+          title: Similar Fictions
+        complete:
+          send: Send
+          title: Complete your fiction
+        count:
+          fictions_count:
+            one: "%{count} fiction"
+            other: "%{count} fictions"
+        edit:
+          attachment_legend: "(Optional) Add an attachment"
+          back: Back
+          select_a_category: Please select a category
+          send: Send
+          title: Edit fiction
+        edit_draft:
+          discard: Discard this draft
+          discard_confirmation: Are you sure you want to discard this fiction draft?
+          send: Preview
+          title: Edit Fiction Draft
+        filters:
+          activity: My activity
+          all: All
+          amendment_type: Type
+          category: Category
+          my_fictions: My fictions
+          origin: Origin
+          related_to: Related to
+          scope: Scope
+          search: Search
+          state: Status
+          type: Type
+          voted: Supported
+        filters_small_view:
+          close_modal: Close modal
+          filter: Filter
+          filter_by: Filter by
+          unfold: Unfold
+        index:
+          collaborative_drafts_list: Access collaborative drafts
+          new_fiction: New fiction
+          see_all_withdrawn: See all withdrawn fictions
+          view_fiction: View fiction
+        linked_fictions:
+          fiction_votes:
+            one: support
+            other: supports
+        new:
+          send: Continue
+          title: Create Your Fiction
+        orders:
+          label: 'Order fictions by:'
+          most_commented: Most commented
+          most_endorsed: Most endorsed
+          most_followed: Most followed
+          most_voted: Most supported
+          random: Random
+          recent: Recent
+          with_more_authors: With more authors
+        participatory_texts:
+          index:
+            document_index: Document index
+          view_index:
+            see_index: See index
+        preview:
+          modify: Modify the fiction
+          fiction_edit_before_minutes:
+            one: You will be able to edit this fiction during the first minute after the fiction is published. Once this time window passes, you will not be able to edit the fiction.
+            other: You will be able to edit this fiction during the first %{count} minutes after the fiction is published. Once this time window passes, you will not be able to edit the fiction.
+          publish: Publish
+          title: Publish your fiction
+        fiction:
+          creation_date: 'Creation: %{date}'
+          view_fiction: View fiction
+        fictions:
+          empty: There is no fiction yet
+          empty_filters: There isn't any fiction with this criteria
+        show:
+          answer: Answer
+          back_to: Back to
+          back_to_list: Back to list
+          changes_at_title: Amendment to "%{title}"
+          comments: Comments
+          edit_fiction: Edit fiction
+          endorsements_list: List of Endorsements
+          estimated_cost: Estimated cost
+          hidden_endorsers_count:
+            one: and %{count} more person
+            other: and %{count} more people
+          link_to_collaborative_draft_help_text: This fiction is the result of a collaborative draft. Review the history
+          link_to_collaborative_draft_text: See the collaborative draft
+          link_to_promoted_emendation_help_text: This fiction is a promoted emendation
+          link_to_promoted_emendation_text: See the rejected emendation.
+          link_to_fiction_from_emendation_help_text: This is a rejected emendation
+          link_to_fiction_from_emendation_text: See the Fiction
+          fiction_accepted_reason: 'This fiction has been accepted because:'
+          fiction_in_evaluation_reason: This fiction is being evaluated
+          fiction_rejected_reason: 'This fiction has been rejected because:'
+          read_less: Read less
+          read_more: Read more
+          report: Report
+          withdraw_btn_hint: You can withdraw your fiction if you change your mind, as long as you have not received any support. The fiction is not deleted, it will appear in the list of withdrawn fictions.
+          withdraw_confirmation_html: Are you sure you want to withdraw this fiction?<br><br><strong>This action cannot be cancelled!</strong>
+          withdraw_fiction: Withdraw fiction
+        tags:
+          changed_from: "(changed from <u>%{previous_name}</u> by an administrator)"
+        update:
+          title: Update fiction
+        vote_button:
+          already_voted: Already supported
+          already_voted_hover: Withdraw support
+          maximum_votes_reached: Support limit reached
+          no_votes_remaining: No supports remaining
+          vote: Support
+          votes_blocked: Supports disabled
+        votes_count:
+          count:
+            one: Support
+            other: Supports
+          most_popular_fiction: Most popular fiction
+          need_more_votes: Need more supports
+        voting_rules:
+          can_accumulate_supports_beyond_threshold:
+            description: Each fiction can accumulate more than %{limit} supports
+          minimum_votes_per_user:
+            description: You must distribute a minimum of %{votes} supports among different fictions.
+            given_enough_votes: You've given enough supports.
+            supports_remaining: You have to support %{remaining_votes} more fictions for your supports to be taken into account.
+          fiction_limit:
+            description: You can create up to %{limit} fictions.
+          threshold_per_fiction:
+            description: In order to be validated fictions need to reach %{limit} supports
+          title: 'Supports are subject to the following rules:'
+          vote_limit:
+            description: You can support up to %{limit} fictions.
+            left: Remaining
+            votes: Supports
+        wizard_aside:
+          back: Back
+          back_from_step_1: Back to fictions
+          back_from_step_2: Back to fictions
+          back_from_step_3: Back to compare fictions
+          back_from_step_4: Back to edit draft
+          info: You are creating a <strong>fiction</strong>.
+        wizard_steps:
+          current_step: Current step
+          see_steps: see steps
+          step_1: Create your fiction
+          step_2: Compare
+          step_3: Complete
+          step_4: Publish your fiction
+          step_of: Step %{current_step_num} of %{total_steps}
+          title: Fiction creation steps
+      fictions_picker:
+        choose_fictions: Choose fictions
+        close: Close
+        more_fictions: There are %{number} more fictions. Refine your search to locate them.
+        no_fictions: No fictions match your search criteria or there isn't any fictions.
+      publish:
+        error: There was a problem publishing the fiction.
+        success: Fiction successfully published.
+      publish_answers:
+        success: Fictions answers successfully published.
+      update:
+        error: There was a problem saving the fiction.
+        success: Fiction successfully updated.
+      update_draft:
+        error: There was a problem saving the collaborative draft.
+        success: Fiction draft successfully updated.
+      versions:
+        collaborative_drafts:
+          back_to_resource: Go back to collaborative draft
+        index:
+          title: Versions
+        fictions:
+          back_to_resource: Go back to fiction
+      withdraw:
+        errors:
+          has_supports: This fiction can not be withdrawn because it already has supports.
+    resource_links:
+      copied_from_component:
+        fiction_fiction: Related fictions
+      included_projects:
+        project_result: 'Results appearing in this project:'
+      included_fictions:
+        fiction_project: 'Fiction appearing in these projects:'
+        fiction_result: 'Fiction appearing in these results:'

@@ -1,0 +1,32 @@
+<% if translated_attribute(component_settings.new_fiction_help_text).present? && @step != :step_4 %>
+  <%= render partial: "decidim/shared/announcement", locals: { announcement: component_settings.new_fiction_help_text } %>
+<% elsif @step == :step_4 %>
+  <%
+    locals = {
+      callout_class: "warning",
+      announcement: t("decidim.fictions.fictions.preview.fiction_edit_before_minutes", count: component_settings.fiction_edit_before_minutes)
+    }
+  %>
+  <%= render partial: "decidim/shared/announcement", locals: locals %>
+<% end %>
+
+<% if fiction_wizard_step_help_text?(@step) %>
+  <div class="fiction_wizard_help_text">
+    <% callout_step_help_text_class ||= nil %>
+    <%= render partial: "decidim/shared/announcement", locals: { announcement: component_settings.try("fiction_wizard_#{@step}_help_text"), callout_class: callout_step_help_text_class } %>
+  </div>
+<% end %>
+
+<h2 class="section-heading">
+  <%= fiction_wizard_step_title action_name %>
+  <%= "(#{@similar_fictions.count})" if @similar_fictions.present? %>
+</h2>
+
+<div class="hide-for-large m-bottom">
+  <div><%= fiction_wizard_steps_title %></div>
+  <div><%= fiction_wizard_current_step_of(@step) %></div>
+
+  <div id="steps" class="wizard__steps steps-toggle is-hidden" data-toggler=".is-hidden">
+    <%= fiction_wizard_stepper(@step) %>
+  </div>
+</div>

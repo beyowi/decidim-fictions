@@ -1,0 +1,26 @@
+<% if has_link_to_resource? %>
+  <div class="card__footer">
+    <div class="card__support">
+      <% if has_actions? %>
+        <% if !current_settings.votes_hidden? %>
+          <%= cell(
+            "decidim/progress_bar",
+            progress_bar_progress,
+            total: progress_bar_total,
+            units_name: "decidim.fictions.fictions.votes_count.count",
+            element_id: "fiction-#{model.id}-votes-count",
+            subtitle_text: progress_bar_subtitle_text,
+            small: true
+          ) %>
+        <% end %>
+        <%= render partial: "decidim/fictions/fictions/vote_button.html", locals: { fiction: model, from_fictions_list: true } %>
+      <% elsif has_footer? %>
+        <div class="card__support__data"></div>
+        <%= link_to resource_path, class: "card__button button--sc light button small" do %>
+          <%= t("decidim.fictions.fictions.fiction.view_fiction") %>
+          <span class="show-for-sr"><%= title %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

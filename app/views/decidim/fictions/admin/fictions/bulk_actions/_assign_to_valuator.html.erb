@@ -1,0 +1,15 @@
+<div id="js-assign-fictions-to-valuator-actions" class="hide js-bulk-action-form">
+  <%= form_tag(valuation_assignment_path, method: :post, id: "js-form-assign-fictions-to-valuator", class: "flex--cc flex-gap--1") do %>
+    <div class="checkboxes hide">
+      <% fictions.each do |fiction| %>
+        <%= check_box_tag "fiction_ids[]", fiction.id, false, class: "js-check-all-fiction js-fiction-id-#{fiction.id}" %>
+      <% end %>
+    </div>
+
+    <%= bulk_valuators_select(current_participatory_space, t("decidim.fictions.admin.fictions.index.assign_to_valuator")) %>
+
+    <%= submit_tag(t("decidim.fictions.admin.fictions.index.assign_to_valuator_button"), id: "js-submit-assign-fictions-to-valuator", class: "button small button--simple float-left") %>
+
+    <button id="js-cancel-assign-fictions-to-valuator" class="button tiny clear compact js-cancel-bulk-action" type="button"><%= t("decidim.fictions.admin.fictions.index.cancel") %></button>
+  <% end %>
+</div>

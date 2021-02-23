@@ -1,0 +1,81 @@
+<tr data-id="<%= fiction.id %>" <%= "data-published-state=false" if fiction.answered? && !fiction.published_state? %>>
+  <td>
+    <%= check_box_tag "fiction_ids_s[]", fiction.id, false, class: "js-check-all-fiction js-fiction-list-check  js-fiction-id-#{fiction.id}" %><br>
+  </td>
+  <td>
+    <%= fiction.id %><br>
+  </td>
+  <td>
+    <%= link_to(
+     decidim_html_escape(present(fiction).title).html_safe,
+     fiction_path(fiction)
+    ) %><br>
+  </td>
+  <td>
+    <% if fiction.category %>
+      <%= translated_attribute fiction.category.name %>
+    <% end %>
+  </td>
+  <% if current_participatory_space.scopes_enabled? %>
+    <td>
+      <% if fiction.scope %>
+        <%= translated_attribute fiction.scope.name %>
+      <% else %>
+        <%= t("decidim.scopes.global") %>
+      <% end %>
+    </td>
+  <% end %>
+
+  <td>
+    <strong class="<%= fiction_state_css_class fiction.state %>">
+      <%= t("decidim/amendment", scope: "activerecord.models", count: 1) if fiction.emendation? %>
+      <%= fiction_complete_state fiction %>
+    </strong>
+  </td>
+
+  <% unless current_settings.publish_answers_immediately? %>
+    <td>
+      <% if fiction.answered? && !fiction.emendation? %>
+        <%= humanize_boolean fiction.published_state? %>
+      <% else %>
+        -
+      <% end %>
+    </td>
+  <% end %>
+
+  <% if current_settings.votes_enabled? %>
+    <td>
+      <%= fiction.fiction_votes_count %>
+    </td>
+  <% end %>
+
+  <% if current_component.settings.comments_enabled? and !current_settings.comments_blocked? %>
+    <td>
+      <%= fiction.comments.count %>
+    </td>
+  <% end %>
+
+  <td>
+    <%= fiction.fiction_notes_count %>
+  </td>
+
+  <td class="valuators-count">
+    <%= fiction.valuation_assignments.count %>
+  </td>
+
+  <td>
+    <%= l fiction.created_at, format: :decidim_short %>
+  </td>
+
+  <td class="table-list__actions">
+    <% if allowed_to? :edit, :fiction, fiction: fiction %>
+      <%= icon_link_to "pencil", edit_fiction_path(fiction), t("actions.edit_fiction", scope: "decidim.fictions"), class: "action-icon--edit-fiction" %>
+    <% end %>
+
+    <%= icon_with_link_to_fiction(fiction) %>
+
+    <%= resource_permissions_link(fiction) %>
+
+   <%= icon_link_to "eye", resource_locator(fiction).path, t("actions.preview", scope: "decidim.fictions.admin"), class: "action-icon--preview", target: :blank %>
+  </td>
+</tr>

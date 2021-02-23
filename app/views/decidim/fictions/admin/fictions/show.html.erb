@@ -1,0 +1,186 @@
+<div class="card">
+  <div class="card-divider">
+    <h2 class="card-title">
+      <%= link_to "#{t ".fictions"} > ", fictions_path %>
+      <%= decidim_html_escape(present(fiction).title).html_safe %>
+
+      <% if allowed_to? :edit, :fiction, fiction: fiction %>
+        <%= icon_link_to "pencil", edit_fiction_path(fiction), t("actions.edit_fiction", scope: "decidim.fictions"), class: "action-icon--edit-fiction" %>
+      <% end %>
+    </h2>
+  </div>
+
+  <div class="card-section">
+    <div class="row column">
+      <strong><%= t ".link" %>:</strong>  <%= link_to resource_locator(fiction).url, resource_locator(fiction).path %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".authors" %>:</strong>
+        <ul id="fiction-authors-list">
+          <% coauthor_presenters_for(fiction).each do |presented_author| %>
+            <li>
+              <%= link_to_if(
+                presented_author.profile_path.present?,
+                presented_author.name,
+                presented_author.profile_path,
+                target: :blank
+              ) %>
+              <% if presented_author.can_be_contacted? && presented_author.nickname != present(current_user).nickname %>
+                <%= icon_link_to "envelope-closed", current_or_new_conversation_path_with(presented_author), t("decidim.contact"), class:"action-icon--new" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".body" %>:</strong> <%= simple_format(present(fiction).body(strip_tags: true)) %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".created_at" %>:</strong> <%= l fiction.created_at, format: :decidim_short %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".votes_count" %>:</strong> <%= fiction.fiction_votes_count %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".votes_ranking" %>:</strong> <%= i18n_votes_ranking_for(fiction) %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".endorsements_count" %>:</strong> <%= fiction.endorsements_count %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".endorsements_ranking" %>:</strong> <%= i18n_endorsements_ranking_for(fiction) %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".amendments_count" %>:</strong> <%= fiction.amendments.count %>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".comments_count" %>:</strong> <%= fiction.comments.count %>
+      <ul id="fiction-comments-alignment-count">
+        <li><strong><%= t ".comments_positive_count" %>:</strong> <%= fiction.comments.positive.count %></li>
+        <li><strong><%= t ".comments_neutral_count" %>:</strong> <%= fiction.comments.neutral.count %></li>
+        <li><strong><%= t ".comments_negative_count" %>:</strong> <%= fiction.comments.negative.count %></li>
+      </ul>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".endorsers" %>:</strong>
+        <ul id="fiction-endorsers-list">
+          <% presented_endorsers = endorsers_presenters_for(fiction).to_a %>
+          <% presented_endorsers.first(5).each do |presented_endorser| %>
+            <li>
+              <%= link_to_if(
+                presented_endorser.profile_path.present?,
+                presented_endorser.name,
+                presented_endorser.profile_path,
+                target: :blank
+              ) %>
+            </li>
+          <% end %>
+          <% if presented_endorsers.count > 5 %>
+            <li>
+              <%= link_to(
+                  t(".n_more_endorsers", count: presented_endorsers.count - 5),
+                  resource_locator(fiction).path
+              ) %>
+            </li>
+          <% end %>
+        </ul>
+    </div>
+
+    <div class="row column">
+      <strong><%= t ".related_meetings" %>:</strong>
+        <ul id="related-meetings">
+          <% fiction.linked_resources(:meetings, "fictions_from_meeting").each do |meeting| %>
+            <% presented_meeting = present(meeting) %>
+            <li>
+              <%= link_to presented_meeting.title, presented_meeting.profile_path %>
+            </li>
+          <% end %>
+        </ul>
+    </div>
+
+    <% if fiction.documents.any? %>
+      <div class="row column">
+        <strong><%= t ".documents" %>:</strong>
+          <ul id="documents">
+            <% fiction.documents.each do |document| %>
+              <li>
+                <%= link_to translated_attribute(document.title), document.url %>
+                <small><%= document.file_type %> <%= number_to_human_size(document.file_size) %></small>
+              </li>
+            <% end %>
+          </ul>
+      </div>
+    <% end %>
+
+    <% if fiction.photos.any? %>
+      <div class="row column">
+        <strong><%= t(".photos") %>:</strong>
+        <div id="photos" class="gallery row">
+          <% fiction.photos.each do |photo| %>
+            <%= link_to photo.big_url, target: "_blank", rel: "noopener" do %>
+              <%= image_tag photo.thumbnail_url, class:"thumbnail", alt: strip_tags(translated_attribute(photo.title)) %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+
+<% if fiction.valuators.any? %>
+<div class="card">
+  <div class="card-divider">
+    <h2 class="card-title">
+      <%= t ".valuators" %>
+    </h2>
+  </div>
+
+  <div class="card-section">
+    <div class="row column">
+      <strong><%= t ".assigned_valuators" %>:</strong>
+      <ul id="valuators">
+        <% fiction.valuation_assignments.each do |assignment| %>
+          <% presented_valuator = present(assignment.valuator) %>
+            <li>
+              <%= link_to(
+                presented_valuator.name,
+                presented_valuator.profile_path,
+                target: :blank
+              ) %>
+
+              <% if allowed_to? :unassign_from_valuator, :fictions, valuator: assignment.valuator %>
+                <%= icon_link_to(
+                  "circle-x",
+                  fiction_valuation_assignment_path(fiction, assignment.valuator_role),
+                  t(".remove_assignment"),
+                  method: :delete,
+                  data: { confirm: t(".remove_assignment_confirmation") },
+                  class: "red-icon"
+                ) %>
+              <% end %>
+            </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<% if allowed_to?(:create, :fiction_note, fiction: fiction) %>
+  <%= render "decidim/fictions/admin/fiction_notes/fiction_notes" %>
+<% end %>
+
+<% if allowed_to?(:create, :fiction_answer, fiction: fiction) && !fiction.emendation? %>
+  <%= render "decidim/fictions/admin/fiction_answers/form" %>
+<% end %>

@@ -1,0 +1,12 @@
+<ul id="fictions_list">
+  <% decorated_fictions do |fiction| %>
+    <li>
+      <label><input type="checkbox" data-picker-text="<%= fiction.id_and_title(html_escape: true) %>" data-picker-url="<%= picker_path %>" value="<%= fiction.id %>" data-picker-choose> <%= fiction.id_and_title(html_escape: true) %> (<%= fiction.reference %>)</label>
+    </li>
+  <% end %>
+  <% if more_fictions? %>
+    <li><div class="callout warning"><%= t("fictions_picker.more_fictions", scope: "decidim.fictions", number: more_fictions_count) %></div>
+    </li>
+  <% end %>
+</ul>
+<div id="no_fictions" class="callout warning"><%= t("fictions_picker.no_fictions", scope: "decidim.fictions") %></div>

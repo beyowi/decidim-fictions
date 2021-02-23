@@ -1,0 +1,3 @@
+<% if fiction.published_state? || fiction.withdrawn? %>
+  <span class="<%= fiction_state_badge_css_class(fiction.state) %> label fiction-status"><%= humanize_fiction_state fiction.state %></span>
+<% end %>

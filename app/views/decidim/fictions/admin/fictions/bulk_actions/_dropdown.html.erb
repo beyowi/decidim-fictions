@@ -1,0 +1,56 @@
+<div id="js-bulk-actions-wrapper">
+  <button
+    id="js-bulk-actions-button"
+    class="button button--nomargin tiny success light dropdown hide"
+    type="button"
+    data-toggle="js-bulk-actions-dropdown">
+    <%= t("decidim.fictions.admin.fictions.index.actions") %>
+  </button>
+
+  <div
+    id="js-bulk-actions-dropdown"
+    class="dropdown-pane"
+    data-position="bottom"
+    data-alignment="right"
+    data-dropdown="dropdown"
+    data-auto-focus="false"
+    data-events="resize">
+    <ul class="list-reset">
+      <li>
+        <button type="button" data-action="recategorize-fictions">
+          <%= t("decidim.fictions.admin.fictions.index.change_category") %>
+        </button>
+      </li>
+      <li>
+        <button type="button" data-action="scope-change-fictions">
+          <%= t("decidim.fictions.admin.fictions.index.change_scope") %>
+        </button>
+      </li>
+      <li>
+        <button type="button" data-action="merge-fictions">
+          <%= t("decidim.fictions.admin.fictions.index.merge") %>
+        </button>
+      </li>
+      <li>
+        <button type="button" data-action="split-fictions">
+          <%= t("decidim.fictions.admin.fictions.index.split") %>
+        </button>
+      </li>
+      <li>
+        <button type="button" data-action="assign-fictions-to-valuator">
+          <%= t("decidim.fictions.admin.fictions.index.assign_to_valuator") %>
+        </button>
+      </li>
+      <li>
+        <button type="button" data-action="unassign-fictions-from-valuator">
+          <%= t("decidim.fictions.admin.fictions.index.unassign_from_valuator") %>
+        </button>
+      </li>
+      <li>
+        <button type="button" data-action="publish-answers">
+          <%= t("decidim.fictions.admin.fictions.index.publish_answers") %>
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>

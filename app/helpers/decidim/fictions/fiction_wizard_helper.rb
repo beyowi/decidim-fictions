@@ -1,0 +1,186 @@
+# frozen_string_literal: true
+
+module Decidim
+  module Fictions
+    # Simple helpers to handle markup variations for fiction wizard partials
+    module FictionWizardHelper
+      # Returns the css classes used for the fiction wizard for the desired step
+      #
+      # step - A symbol of the target step
+      # current_step - A symbol of the current step
+      #
+      # Returns a string with the css classes for the desired step
+      def fiction_wizard_step_classes(step, current_step)
+        step_i = step.to_s.split("_").last.to_i
+        if step_i == fiction_wizard_step_number(current_step)
+          %(step--active #{step} #{current_step})
+        elsif step_i < fiction_wizard_step_number(current_step)
+          %(step--past #{step})
+        else
+          %()
+        end
+      end
+
+      # Returns the number of the step
+      #
+      # step - A symbol of the target step
+      def fiction_wizard_step_number(step)
+        step.to_s.split("_").last.to_i
+      end
+
+      # Returns the name of the step, translated
+      #
+      # step - A symbol of the target step
+      def fiction_wizard_step_name(step)
+        t("decidim.fictions.#{type_of}.wizard_steps.#{step}")
+      end
+
+      # Returns the page title of the given step, translated
+      #
+      # action_name - A string of the rendered action
+      def fiction_wizard_step_title(action_name)
+        step_title = case action_name
+                     when "create"
+                       "new"
+                     when "update_draft"
+                       "edit_draft"
+                     else
+                       action_name
+                     end
+
+        t("decidim.fictions.#{type_of}.#{step_title}.title")
+      end
+
+      # Returns the list item of the given step, in html
+      #
+      # step - A symbol of the target step
+      # current_step - A symbol of the current step
+      def fiction_wizard_stepper_step(step, current_step)
+        return if step == :step_4 && type_of == :collaborative_drafts
+
+        attributes = { class: fiction_wizard_step_classes(step, current_step).to_s }
+        step_title = fiction_wizard_step_name(step)
+        if step.to_s.split("_").last.to_i == fiction_wizard_step_number(current_step)
+          current_step_title = fiction_wizard_step_name("current_step")
+          step_title = content_tag(:span, "#{current_step_title}: ", class: "show-for-sr") + step_title
+          attributes["aria-current"] = "step"
+        end
+
+        content_tag(:li, step_title, attributes)
+      end
+
+      # Returns the list with all the steps, in html
+      #
+      # current_step - A symbol of the current step
+      def fiction_wizard_stepper(current_step)
+        content_tag :ol, class: "wizard__steps" do
+          %(
+            #{fiction_wizard_stepper_step(:step_1, current_step)}
+            #{fiction_wizard_stepper_step(:step_2, current_step)}
+            #{fiction_wizard_stepper_step(:step_3, current_step)}
+            #{fiction_wizard_stepper_step(:step_4, current_step)}
+          ).html_safe
+        end
+      end
+
+      # Returns a string with the current step number and the total steps number
+      #
+      def fiction_wizard_current_step_of(step)
+        current_step_num = fiction_wizard_step_number(step)
+        see_steps = content_tag(:span, class: "hide-for-large") do
+          concat " ("
+          concat content_tag :a, t(:"decidim.fictions.fictions.wizard_steps.see_steps"), "data-toggle": "steps"
+          concat ")"
+        end
+        content_tag :span, class: "text-small" do
+          concat t(:"decidim.fictions.fictions.wizard_steps.step_of", current_step_num: current_step_num, total_steps: total_steps)
+          concat see_steps
+        end
+      end
+
+      def fiction_wizard_steps_title
+        t("title", scope: "decidim.fictions.#{type_of}.wizard_steps")
+      end
+
+      # Returns a boolean if the step has a help text defined
+      #
+      # step - A symbol of the target step
+      def fiction_wizard_step_help_text?(step)
+        translated_attribute(component_settings.try("fiction_wizard_#{step}_help_text")).present?
+      end
+
+      # Renders a user_group select field in a form.
+      # form - FormBuilder object
+      # name - attribute user_group_id
+      #
+      # Returns nothing.
+      def user_group_select_field(form, name)
+        selected = @form.user_group_id.presence
+        user_groups = Decidim::UserGroups::ManageableUserGroups.for(current_user).verified
+        form.select(
+          name,
+          user_groups.map { |g| [g.name, g.id] },
+          selected: selected,
+          include_blank: current_user.name
+        )
+      end
+
+      private
+
+      def total_steps
+        case type_of
+        when :collaborative_drafts
+          3
+        when :fictions
+          4
+        else
+          4
+        end
+      end
+
+      def wizard_aside_info_text
+        case type_of
+        when :collaborative_drafts
+          t("info", scope: "decidim.fictions.collaborative_drafts.wizard_aside").html_safe
+        else
+          t("info", scope: "decidim.fictions.fictions.wizard_aside").html_safe
+        end
+      end
+
+      # Renders the back link except for step_2: compare
+      def fiction_wizard_aside_link_to_back(step)
+        url = case step
+              when :step_1
+                fictions_path
+              when :step_3
+                compare_fiction_path
+              when :step_4
+                edit_draft_fiction_path
+              end
+        url
+      end
+
+      def wizard_aside_back_text(from = nil)
+        key = "back"
+        key = "back_from_#{from}" if from
+
+        case type_of
+        when :collaborative_drafts
+          t(key, scope: "decidim.fictions.collaborative_drafts.wizard_aside").html_safe
+        else
+          t(key, scope: "decidim.fictions.fictions.wizard_aside").html_safe
+        end
+      end
+
+      def type_of
+        if ["Decidim::Fictions::CollaborativeDraftForm"].include? @form.class.name
+          :collaborative_drafts
+        elsif @collaborative_draft.present?
+          :collaborative_drafts
+        else
+          :fictions
+        end
+      end
+    end
+  end
+end

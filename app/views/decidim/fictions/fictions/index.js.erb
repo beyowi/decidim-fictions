@@ -1,0 +1,10 @@
+var $fictions = $('#fictions');
+var $fictionsCount = $('#fictions-count');
+var $orderFilterInput = $('.order_filter');
+
+$fictions.html('<%= j(render partial: "fictions").strip.html_safe %>');
+$fictionsCount.html('<%= j(render partial: "count").strip.html_safe %>');
+$orderFilterInput.val('<%= order %>');
+
+var $dropdownMenu = $('.dropdown.menu', $fictions);
+$dropdownMenu.foundation();

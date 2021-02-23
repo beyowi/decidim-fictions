@@ -1,0 +1,57 @@
+<% if fiction.rejected? || fiction.withdrawn? %>
+  <div></div>
+<% else %>
+  <% if component_settings.participatory_texts_enabled? && from_fictions_list %>
+    <%= render partial: "decidim/fictions/fictions/participatory_texts/fiction_vote_button", locals: { fiction: fiction, from_fictions_list: true } %>
+  <% else %>
+    <div id="fiction-<%= fiction.id %>-vote-button" class="button--vote-button">
+      <% if !current_user %>
+        <% if current_settings.votes_blocked? %>
+          <%= action_authorized_button_to :vote, t("decidim.fictions.fictions.vote_button.votes_blocked"), fiction_fiction_vote_path(fiction_id: fiction, from_fictions_list: from_fictions_list), resource: fiction, class: "button #{vote_button_classes(from_fictions_list)} disabled", disabled: true %>
+        <% else %>
+          <%= action_authorized_button_to :vote, fiction_fiction_vote_path(fiction_id: fiction, from_fictions_list: from_fictions_list), resource: fiction, class: "button #{vote_button_classes(from_fictions_list)}", data: { disable: true, "redirect-url": fiction_path(fiction) } do %>
+            <%= t("decidim.fictions.fictions.vote_button.vote") %>
+            <span class="show-for-sr"><%= decidim_html_escape(present(fiction).title) %></span>
+          <% end %>
+        <% end %>
+      <% else %>
+        <% if @voted_fictions ? @voted_fictions.include?(fiction.id) : fiction.voted_by?(current_user) %>
+          <%= action_authorized_button_to(
+            :vote,
+            fiction_fiction_vote_path(fiction_id: fiction, from_fictions_list: from_fictions_list),
+            resource: fiction,
+            method: :delete,
+            remote: true,
+            data: {
+              disable: true,
+              original: t("decidim.fictions.fictions.vote_button.already_voted"),
+              replace: t("decidim.fictions.fictions.vote_button.already_voted_hover"),
+              "redirect-url": fiction_path(fiction)
+            },
+            class: "button #{vote_button_classes(from_fictions_list)} active light",
+            id: "vote_button-#{fiction.id}"
+          ) do %>
+            <%= icon("check", class: "icon--small") %>
+            <%= t("decidim.fictions.fictions.vote_button.already_voted") %>
+            <span class="show-for-sr"><%= decidim_html_escape(present(fiction).title) %></span>
+          <% end %>
+        <% else %>
+          <% if fiction.maximum_votes_reached? && !fiction.can_accumulate_supports_beyond_threshold && current_component.participatory_space.can_participate?(current_user) %>
+            <%= content_tag :button, t("decidim.fictions.fictions.vote_button.maximum_votes_reached"), class: "button #{vote_button_classes(from_fictions_list)} disabled", disabled: true %>
+          <% else %>
+            <% if vote_limit_enabled? && remaining_votes_count_for(current_user) == 0 %>
+              <%= content_tag :button, t("decidim.fictions.fictions.vote_button.no_votes_remaining"), class: "button #{vote_button_classes(from_fictions_list)}", disabled: true %>
+            <% elsif current_settings.votes_blocked? || !current_component.participatory_space.can_participate?(current_user) %>
+              <%= content_tag :button, t("decidim.fictions.fictions.vote_button.votes_blocked"), class: "button #{vote_button_classes(from_fictions_list)} disabled", disabled: true %>
+            <% else %>
+              <%= action_authorized_button_to :vote, fiction_fiction_vote_path(fiction_id: fiction, from_fictions_list: from_fictions_list), resource: fiction, remote: true, data: { disable: true, "redirect-url": fiction_path(fiction) }, class: "button #{vote_button_classes(from_fictions_list)}" do %>
+                <%= t("decidim.fictions.fictions.vote_button.vote") %>
+                <span class="show-for-sr"><%= decidim_html_escape(present(fiction).title) %></span>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

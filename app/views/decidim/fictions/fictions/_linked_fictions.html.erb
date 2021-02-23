@@ -1,0 +1,34 @@
+<div class="card card--action card--list">
+  <% resources.each do |fiction| %>
+    <div class="card--list__item">
+      <div class="card--list__text">
+        <%= link_to resource_locator(fiction).path do %>
+          <%= icon "fictions", class: "card--list__icon", remove_icon_class: true %>
+        <% end %>
+        <div>
+          <%= link_to resource_locator(fiction).path, class: "card__link" do %>
+            <h5 class="card--list__heading"><%== decidim_html_escape(present(fiction).title) %></h5>
+          <% end %>
+          <% present(fiction) do |fiction| %>
+            <div class="author">
+              <span class="author__avatar">
+                <%= image_tag fiction.author.avatar_url %>
+              </span>
+              <span class="author__name">
+                <strong><%= fiction.author.name %></strong>
+                <%= fiction.author.nickname %>
+              </span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <% if !current_settings.try(:votes_hidden?) && !fiction.component.current_settings.votes_hidden? %>
+        <div class="card--list__data">
+          <span class="card--list__data__number">
+            <%= fiction.votes.size %>
+          </span> <%= t(".fiction_votes", count: fiction.votes.size) %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -321,7 +321,7 @@ es:
         description: Número de ficciones aceptadas
         object: ficciones
         title: Ficciones aceptadas
-      endorsements:
+      fiction_endorsements:
         description: Número de adhesiones a ficciones
         object: adhesiones
         title: Adhesiones
@@ -329,7 +329,7 @@ es:
         description: Número de ficciones
         object: ficciones
         title: Ficciones
-      votes:
+      fiction_votes:
         description: Número de apoyos a las ficciones
         object: apoyos
         title: Apoyos

@@ -299,7 +299,7 @@ it:
         description: Numero di finzioni accettate dagli utenti
         object: finzioni
         title: Finzioni accettate
-      endorsements:
+      fiction_endorsements:
         description: Numero di approvazioni generate nelle finzioni
         object: Mi piace
         title: Mi piace
@@ -307,7 +307,7 @@ it:
         description: Numero di finzioni generate
         object: finzioni
         title: finzioni
-      votes:
+      fiction_votes:
         description: Numero di voti generati nelle finzioni degli utenti
         object: voti
         title: Voti

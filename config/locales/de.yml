@@ -299,7 +299,7 @@ de:
         description: Anzahl der von den Benutzern akzeptierten Fiktionen
         object: Fiktionen
         title: Akzeptierte Fiktionen
-      endorsements:
+      fiction_endorsements:
         description: Anzahl der in Vorschlägen generierten Vermerke
         object: Änderungsvorschläge
         title: Änderungsvorschläge
@@ -307,7 +307,7 @@ de:
         description: Anzahl der Fiktionen
         object: Fiktionen
         title: Fiktionen
-      votes:
+      fiction_votes:
         description: Anzahl der Unterstützungen zu Vorschlägen
         object: Unterstützer
         title: Unterstützer

@@ -322,7 +322,7 @@ en:
         description: Number of fictions accepted
         object: fictions
         title: Accepted fictions
-      endorsements:
+      fiction_endorsements:
         description: Number of endorsements to fictions
         object: endorsements
         title: Endorsements
@@ -330,7 +330,7 @@ en:
         description: Number of fictions
         object: fictions
         title: Fictions
-      votes:
+      fiction_votes:
         description: Number of supports to fictions
         object: supports
         title: Supports

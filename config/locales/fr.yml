@@ -321,7 +321,7 @@ fr:
         description: Nombre de fictions acceptées par les utilisateurs
         object: fictions
         title: Fictions Acceptées
-      endorsements:
+      fiction_endorsements:
         description: Nombre d'avenants générés dans les fictions
         object: soutiens
         title: Soutiens
@@ -329,7 +329,7 @@ fr:
         description: Nombre de fictions générées
         object: fictions
         title: Fictions
-      votes:
+      fiction_votes:
         description: Nombre de votes générés dans les fictions par les utilisateurs
         object: votes
         title: Votes

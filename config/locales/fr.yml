@@ -324,7 +324,7 @@ fr:
       fiction_endorsements:
         description: Nombre d'avenants générés dans les fictions
         object: soutiens
-        title: Soutiens
+        title: Soutiens des fictions
       fictions:
         description: Nombre de fictions générées
         object: fictions
@@ -332,7 +332,7 @@ fr:
       fiction_votes:
         description: Nombre de votes générés dans les fictions par les utilisateurs
         object: votes
-        title: Votes
+        title: Votes des fictions
     participatory_processes:
       participatory_process_groups:
         highlighted_fictions:
